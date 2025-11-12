@@ -1,0 +1,1 @@
+void force_quit(char* msg, int status);
