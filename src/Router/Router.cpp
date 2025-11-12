@@ -46,8 +46,11 @@ Router makeRouter(char* ip, int port, char* filename){
 	Router *rp = (Router*) malloc(sizeof(Router));
 
 	Router r = *rp;
-	r.routing_table = fopen(filename, "r");
+	FILE* tableFile = fopen(filename, "r");
 
+	r.routing_table = makeTable(tableFile);
+
+	fclose(tableFile);
 
 
 	// Trabaja el address del router en estructura
@@ -84,11 +87,3 @@ Router makeRouter(char* ip, int port, char* filename){
 	return r;
 };
 
-
-
-void destroyRouter(Router* r){
-
-	Router a = *r;
-	fclose(a.routing_table);
-	//delete r;
-}

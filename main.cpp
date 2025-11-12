@@ -6,7 +6,6 @@
 using namespace std;
 
 #include "src/Router/Router.h"
-#include "src/Router/RoutingTable/Table.h"
 
 
 int main(int argc, char *argv[]){
@@ -17,10 +16,9 @@ int main(int argc, char *argv[]){
 
 	FILE *f = fopen(argv[3], "r");
 
-	RouteTable table = makeTable(f);
+	Router r = makeRouter(argv[1], atoi(argv[2]), argv[3]);
+	r.routing_table->print();
 
-	table.print();
-/* 	RouteTable table(f);
-	table.print(); */
+
 	return 0;
 }

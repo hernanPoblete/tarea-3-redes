@@ -59,4 +59,4 @@ class RouteTable{
 };
 
 
-RouteTable makeTable(FILE *f);
+RouteTable *makeTable(FILE *f);

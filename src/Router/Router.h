@@ -1,14 +1,16 @@
 #include "../config.h"
+#include "RoutingTable/Table.h"
 
 class Router{
 	public:
 		struct sockaddr_in address;
-		FILE* routing_table;
+		RouteTable *routing_table;
 		int sock_num;
 		int opt;
 
+		
 		void readMsg(char **dest){
-			int status = read(sock_num, *dest, MAX_BUFF_SIZE-1);
+			int status = read(sock_num, *dest, PACKET_SIZE);
 			printf("Status: %i\n", status);
 			if(status<0){
 				perror("Error while reading");

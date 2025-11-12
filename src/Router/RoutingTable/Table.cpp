@@ -40,10 +40,10 @@ RouteNode* makePNode(FILE *ftable){
 	return pnode;
 }
 
-RouteTable makeTable(FILE *f){
+RouteTable *makeTable(FILE *f){
 	RouteTable *ptable = (RouteTable*) malloc(sizeof(RouteTable));
 	
 	ptable->phead = makePNode(f);
 
-	return *ptable;
+	return ptable;
 };
