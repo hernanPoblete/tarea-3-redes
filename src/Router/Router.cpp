@@ -1,4 +1,5 @@
 #include <netinet/in.h>
+#include <arpa/inet.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,38 +7,6 @@
 #include <unistd.h>
 #include "Router.h"
 
-/**
- * Transforma un string de ip en un mapa de 32 bits de dirección ip
- * 
- * @param ip El string conteniente de la dirección
- * @returns Un long con los 32 bits de dirección ip
- */
-char* ip_to_bytes(char *ip){
-	char *partition[4];
-	char map[4] = {0,0,0,0};
-
-	for(int i = 0; i<4; i++){
-		partition[i] = (char*) malloc(1);
-		partition[i][0] = 0;
-	}
-
-	int index = 0;
-
-	for(int i = 0; i<strlen(ip); i++){
-		if(ip[i] != '.'){
-			strncat(partition[index], ip+i, 1);
-		}else{
-			index+=1;
-		}
-
-	}
-
-	for(int i = 0; i<4; i++){
-		map[i] = (atoi(partition[i]));	
-	}
-
-	return map;
-};
 
 
 Router makeRouter(char* ip, int port, char* filename){
@@ -52,11 +21,11 @@ Router makeRouter(char* ip, int port, char* filename){
 
 	fclose(tableFile);
 
-
-	// Trabaja el address del router en estructura
+	unsigned long addr = 0;
+	inet_pton(AF_INET, ip, &addr);
 
 	r.address.sin_family = AF_INET;
-	r.address.sin_addr.s_addr = INADDR_ANY; //ip_to_bytes(ip); //TODO: Indagar en esto y en como usar mi IP en vez de esto
+	r.address.sin_addr.s_addr = addr;
 	r.address.sin_port = htons(port);
 
 

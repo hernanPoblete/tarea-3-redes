@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "../../utils.h"
+#include <arpa/inet.h>
 
 typedef struct {
 	char CIDR[4];
@@ -24,6 +25,10 @@ class RouteNode{
 			printf("Rango de puertos: [%u ; %u] \n", starting_point, ending_point);
 			printf("Destino: (%d, %d, %d, %d):%u\n", *(gateway_ip), *(gateway_ip+1) , *(gateway_ip+2),*(gateway_ip+3), gateway_port);
 
+		}
+
+		unsigned long send_addr(){
+			return char_arr_to_ip_long(CIDR);
 		}
 
 		RouteNode* next;

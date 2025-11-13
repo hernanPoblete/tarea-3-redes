@@ -12,25 +12,38 @@ class Router{
 
 		
 		Packet *readMsg(){
-			Packet* ppack = (Packet*)malloc(PACKET_SIZE);
+			Packet* ppack = (Packet*)malloc(sizeof(Packet));
 
-			int status = read(sock_num, ppack, PACKET_SIZE);
-			printf("Status: %i\n", status);
+			int status = read(sock_num, ppack, sizeof(Packet));
 			if(status<0){
 				perror("Error while reading");
 				exit(1);
 			}
 			ppack->raw_msg[status-HEADER_SIZE] = '\0';
-			printf("Paquete alojado en %p\n", ppack);
-			printf("\tDirección guardada en: %p\n", ppack->direccion);
-			printf("\tPuerto guardado en: %p\n", &(ppack->puerto));
-			printf("\tmensaje guardado en: %p\n", ppack->raw_msg);
 			return ppack;
+		}
+
+		void mainLoop(){
+			Packet *recv = readMsg();
+
+			if(address.sin_port != recv->puerto || address.sin_addr.s_addr != char_arr_to_ip_long(recv->direccion)){
+				RouteNode *node = routing_table->lookup(recv->direccion, recv->puerto);
+
+				if(node == NULL){
+					printf("No hay ruta para llegar hasta %s desde la dirección _._._._\n", char_arr_to_ip_str(recv->direccion)); //TODO: Añadir dirección
+				}else{
+					printf("TODO: Realizar salto\n");
+				}
+			}else{
+				printf("%s\n", recv->raw_msg);
+			}
+
+
+			
+			mainLoop();
 		}
 
 };
 
-
-char* ip_to_bytes(char *ip);
 Router makeRouter(char* ip, int port, char* filename);
 void destroyRouter(Router* r);
