@@ -33,10 +33,12 @@ class RouteNode{
 class RouteTable{
 	public:
 		RouteNode *phead;
+		unsigned long long size;
 
 		void print(){
 
 			printf("Imprimiendo información de tabla...\n");
+			printf("Tamaño de la tabla: %lld\n", size);
 
 
 			RouteNode *current = phead;
@@ -44,7 +46,7 @@ class RouteTable{
 			printf("Cabeza alojada en ");
 			printf("%p\n", phead);
 
-			while(current!=NULL){
+			for (unsigned long long i = 0; i<size; i++){
 				printf("\n");				
 				printf("Revisando nodo %p\n", current);
 				
@@ -55,6 +57,30 @@ class RouteTable{
 
 				current = current->next;				
 			}
+		}
+
+		RouteNode *lookup(unsigned char *ip, unsigned int port){
+			
+			
+			for (unsigned long long i = 0; (i < size); i++){
+
+				for(int j = 0; j<4; j++){
+					if(*(phead->CIDR+j) != *(ip+j)){
+						goto end;
+					}
+				}
+
+				if((phead->starting_point <= port) && (port <= phead->ending_point)){
+					RouteNode* ret = phead;
+					phead = phead->next;
+					return ret;
+				}
+				end:
+					phead = phead->next;				
+					continue;
+			}
+
+			return NULL;
 		}
 };
 

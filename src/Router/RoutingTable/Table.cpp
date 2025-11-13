@@ -45,5 +45,16 @@ RouteTable *makeTable(FILE *f){
 	
 	ptable->phead = makePNode(f);
 
+	unsigned long long size = 1;
+	RouteNode *iter = ptable->phead;
+
+	while(iter->next != NULL){
+		size += 1;
+		iter = iter->next;
+	}
+
+	iter->next = ptable->phead; // Transformed the linked list into a looped linked list. Makes adding on runtime (which should never happen anyway) harder, but round robin implementation easier
+	ptable->size = size;
+	
 	return ptable;
 };
