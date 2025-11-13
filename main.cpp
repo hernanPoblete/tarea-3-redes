@@ -18,18 +18,7 @@ int main(int argc, char *argv[]){
 
 	Router r = makeRouter(argv[1], atoi(argv[2]), argv[3]);
 
-	
 
-	unsigned char* ip_mock = (unsigned char *) malloc(4);
-	*ip_mock = 127;
-	*(ip_mock+1) = 0;
-	*(ip_mock+2) = 0;
-	*(ip_mock+3) = 1;
-
-	unsigned int port_mock = 5500;
-
-	RouteNode* node;
-
-
+	r.mainLoop();
 	return 0;
 }

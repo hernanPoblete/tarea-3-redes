@@ -14,7 +14,11 @@ class Router{
 		Packet *readMsg(){
 			Packet* ppack = (Packet*)malloc(sizeof(Packet));
 
-			int status = read(sock_num, ppack, sizeof(Packet));
+			//int status = read(sock_num, ppack, sizeof(Packet));
+
+			int len = sizeof(ppack->addr);
+			int status = recvfrom(sock_num, ppack, HEADER_SIZE+MSG_SIZE, 0, (struct sockaddr*)&ppack->addr, (socklen_t*)&len);
+
 			if(status<0){
 				perror("Error while reading");
 				exit(1);
@@ -25,12 +29,11 @@ class Router{
 
 		void mainLoop(){
 			Packet *recv = readMsg();
-
 			if(address.sin_port != recv->puerto || address.sin_addr.s_addr != char_arr_to_ip_long(recv->direccion)){
 				RouteNode *node = routing_table->lookup(recv->direccion, recv->puerto);
 
 				if(node == NULL){
-					printf("No hay ruta para llegar hasta %s desde la dirección _._._._\n", char_arr_to_ip_str(recv->direccion)); //TODO: Añadir dirección
+					printf("No hay ruta para llegar hasta %s desde la dirección %s\n", char_arr_to_ip_str(recv->direccion), long_addr_to_ip_str(recv->addr.sin_addr.s_addr)); //TODO: Añadir dirección
 				}else{
 					printf("TODO: Realizar salto\n");
 				}

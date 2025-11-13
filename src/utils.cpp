@@ -26,6 +26,15 @@ char* char_arr_to_ip_str(unsigned char* arr){
 }
 
 char* long_addr_to_ip_str(unsigned long laddr){
-	printf("ld", laddr);
-	return "";
+	unsigned char * ret = (unsigned char*) malloc(sizeof(unsigned long));
+	
+	for(int i = 0; i<sizeof(unsigned long); i++){
+		unsigned long mask = (1<<8) -1;
+
+		*(ret+i) =(laddr&(mask<<(i<<3)))>>(i<<3); //Mateu estaría orgulloso :3
+		
+	}
+
+
+	return char_arr_to_ip_str(ret);
 }
