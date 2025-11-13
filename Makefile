@@ -13,6 +13,8 @@ quick:
 	touch $(NAME)
 	rm $(NAME)
 	g++ $(FLAGS) $(FILES)
-	./$(NAME) 127.0.0.1 8081 "routes.txt"
+	make run-compiled
 clean:
 	rm ./*.out
+run-compiled:
+	./$(NAME) 127.0.0.1 8081 "routes.txt"

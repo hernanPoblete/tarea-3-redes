@@ -1,2 +1,5 @@
 **/**/*.out
 **/**/*.bin
+
+.vscode/
+**/**/__pycache__

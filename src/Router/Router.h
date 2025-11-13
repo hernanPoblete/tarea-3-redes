@@ -1,5 +1,7 @@
 #include "../config.h"
 #include "RoutingTable/Table.h"
+#include "Packets/Packet.h"
+
 
 class Router{
 	public:
@@ -9,15 +11,21 @@ class Router{
 		int opt;
 
 		
-		void readMsg(char **dest){
-			int status = read(sock_num, *dest, PACKET_SIZE);
+		Packet *readMsg(){
+			Packet* ppack = (Packet*)malloc(PACKET_SIZE);
+
+			int status = read(sock_num, ppack, PACKET_SIZE);
 			printf("Status: %i\n", status);
 			if(status<0){
 				perror("Error while reading");
 				exit(1);
 			}
-
-
+			ppack->raw_msg[status-HEADER_SIZE] = '\0';
+			printf("Paquete alojado en %p\n", ppack);
+			printf("\tDirección guardada en: %p\n", ppack->direccion);
+			printf("\tPuerto guardado en: %p\n", &(ppack->puerto));
+			printf("\tmensaje guardado en: %p\n", ppack->raw_msg);
+			return ppack;
 		}
 };
 

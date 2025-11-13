@@ -17,7 +17,10 @@ int main(int argc, char *argv[]){
 	FILE *f = fopen(argv[3], "r");
 
 	Router r = makeRouter(argv[1], atoi(argv[2]), argv[3]);
-	r.routing_table->print();
+	
+
+	Packet *ppack = r.readMsg();
+
 
 
 	return 0;
