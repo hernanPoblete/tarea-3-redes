@@ -6,4 +6,3 @@
 
 #define HEADER_SIZE 8
 #define MSG_SIZE 64
-#define PACKET_SIZE HEADER_SIZE+MSG_SIZE
