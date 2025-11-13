@@ -29,13 +29,35 @@ class Router{
 
 		void mainLoop(){
 			Packet *recv = readMsg();
-			if(address.sin_port != recv->puerto || address.sin_addr.s_addr != char_arr_to_ip_long(recv->direccion)){
+
+			printf("Paquete recibido desde %s:%u, que va hacia %s:%u\n",
+			long_addr_to_ip_str(recv->addr.sin_addr.s_addr), recv->addr.sin_port,
+			char_arr_to_ip_str(recv->direccion), recv->puerto);
+
+			if(address.sin_port != htons(recv->puerto) || address.sin_addr.s_addr != char_arr_to_ip_long(recv->direccion)){
 				RouteNode *node = routing_table->lookup(recv->direccion, recv->puerto);
 
 				if(node == NULL){
 					printf("No hay ruta para llegar hasta %s desde la dirección %s\n", char_arr_to_ip_str(recv->direccion), long_addr_to_ip_str(recv->addr.sin_addr.s_addr)); //TODO: Añadir dirección
 				}else{
-					printf("TODO: Realizar salto\n");
+					printf("Redirigiendo paquete en dirección de memoria %p con destino final %s:%u, desde %s:%u hacia %s:%u\n", 
+						recv, 
+						char_arr_to_ip_str(recv->direccion), recv->puerto, 
+						long_addr_to_ip_str(address.sin_addr.s_addr), htons(address.sin_port),
+						char_arr_to_ip_str(node->gateway_ip), node->gateway_port
+					);
+
+					struct sockaddr_in out;
+
+					out.sin_family = AF_INET;
+					out.sin_port = htons(node->gateway_port);
+
+					unsigned long ip = 0;
+					inet_pton(AF_INET, char_arr_to_ip_str(node->gateway_ip) ,&ip);
+
+					out.sin_addr.s_addr = ip;
+
+					sendto(sock_num, recv, HEADER_SIZE+MSG_SIZE, 0, (struct sockaddr*)&out, (socklen_t)sizeof(out));
 				}
 			}else{
 				printf("%s\n", recv->raw_msg);
