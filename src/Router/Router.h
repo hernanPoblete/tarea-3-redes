@@ -31,10 +31,12 @@ class Router{
 			Packet *recv = readMsg();
 
 			printf("Paquete recibido desde %s:%u, que va hacia %s:%u\n",
-			long_addr_to_ip_str(recv->addr.sin_addr.s_addr), recv->addr.sin_port,
+			long_addr_to_ip_str(recv->addr.sin_addr.s_addr), htons(recv->addr.sin_port),
 			char_arr_to_ip_str(recv->direccion), recv->puerto);
-
-			if(address.sin_port != htons(recv->puerto) || address.sin_addr.s_addr != char_arr_to_ip_long(recv->direccion)){
+			
+			if(recv->ttl == 0){
+				printf("Se recibió paquete desde %s:%u con TTL 0\n" , long_addr_to_ip_str(recv->addr.sin_addr.s_addr), htons(recv->addr.sin_port));
+			} else if(address.sin_port != htons(recv->puerto) || address.sin_addr.s_addr != char_arr_to_ip_long(recv->direccion)){
 				RouteNode *node = routing_table->lookup(recv->direccion, recv->puerto);
 
 				if(node == NULL){
@@ -56,7 +58,7 @@ class Router{
 					inet_pton(AF_INET, char_arr_to_ip_str(node->gateway_ip) ,&ip);
 
 					out.sin_addr.s_addr = ip;
-
+					recv->ttl-=1;
 					sendto(sock_num, recv, HEADER_SIZE+MSG_SIZE, 0, (struct sockaddr*)&out, (socklen_t)sizeof(out));
 				}
 			}else{

@@ -24,7 +24,7 @@ port = 0
 message = ""
 router_ip = ""
 router_port = 0
-
+ttl = 0
 
 while True:
 	print("================================")
@@ -40,14 +40,18 @@ while True:
 		router_ip = input("Dirección del router (CIDR): ")
 		router_port = int(input("Dirección del router (Puerto): "))
 
+
+	ttl = int(input("TTL: "))
+
 	addr_router = (router_ip, router_port)
 
 	dest_bytes = reduce(lambda x, y: x+y, map(lambda x: x.to_bytes() ,map(int, dest.split("."))))
 	dest_port_bytes = port.to_bytes(4, "little") #IMPORTANT: MANDAR MESNAJES EN LITTLE ENDIAN PARA QUE C SEA FELIZ
 
 	msg_bytes = message.encode()
+	ttl_bytes = ttl.to_bytes()
 
-	full_msg = dest_bytes+dest_port_bytes+msg_bytes
+	full_msg = dest_bytes+dest_port_bytes+ttl_bytes+msg_bytes
 	
 	if (not first_attempt) and mode == 3:
 		input()
