@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@types/hashmap": "^2.3.4",
+    "@types/node": "^24.10.0",
+    "hashmap": "^2.4.0"
+  }
+}
