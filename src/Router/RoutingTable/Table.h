@@ -18,12 +18,15 @@ class RouteNode{
 		unsigned char *gateway_ip;
 		unsigned int gateway_port;
 
+		unsigned int MTU;
+
 		void print(){
 
 			printf("Información sobre nodo: \n");
 			printf("CIDR: (%d, %d, %d, %d)\n", *(CIDR), *(CIDR+1) , *(CIDR+2),*(CIDR+3));
 			printf("Rango de puertos: [%u ; %u] \n", starting_point, ending_point);
 			printf("Destino: (%d, %d, %d, %d):%u\n", *(gateway_ip), *(gateway_ip+1) , *(gateway_ip+2),*(gateway_ip+3), gateway_port);
+			printf("MTU desde este Router: %u bytes\n", MTU);
 
 		}
 

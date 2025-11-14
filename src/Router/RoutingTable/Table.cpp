@@ -15,14 +15,16 @@ RouteNode* makePNode(FILE *ftable){
 	unsigned char *gateway_ip = (unsigned char*) malloc(4);;
 	unsigned int gateway_port;
 
+	unsigned int MTU;
 	
-	int status = fscanf(ftable, "%hhu.%hhu.%hhu.%hhu %u %u %hhu.%hhu.%hhu.%hhu %u\n", 
+	int status = fscanf(ftable, "%hhu.%hhu.%hhu.%hhu %u %u %hhu.%hhu.%hhu.%hhu %u %u\n", 
 		CIDR, CIDR+1, CIDR+2, CIDR+3,
 
 		&starting_point, &ending_point,
 
 		gateway_ip, gateway_ip+1,gateway_ip+2,gateway_ip+3,
-		&gateway_port
+		&gateway_port,
+		&MTU
 	);
 
 	if (status<=0){
@@ -34,6 +36,7 @@ RouteNode* makePNode(FILE *ftable){
 	pnode->ending_point = ending_point;
 	pnode->gateway_ip = gateway_ip;
 	pnode->gateway_port = gateway_port;
+	pnode->MTU = MTU;
 
 
 	pnode->next = makePNode(ftable);
