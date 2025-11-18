@@ -75,7 +75,7 @@ class Packet{
 	};
 
 
-	Packet(	struct sockaddr_in addr_, unsigned char direccion_[4], unsigned int puerto_, unsigned char ttl_, unsigned int ID_, unsigned int offset_, unsigned char flag_, unsigned int msg_length_){
+	Packet(	struct sockaddr_in addr_, unsigned char direccion_[4], unsigned int puerto_, unsigned char ttl_, unsigned int ID_, unsigned int offset_, unsigned char flag_, unsigned int msg_length_, char* msg){
 		addr = addr_;
 		puerto = puerto_;
 		ttl = ttl_;
@@ -83,12 +83,33 @@ class Packet{
 		offset = offset_;
 		flag = flag_;
 		msg_length = msg_length_;
+
+
+		for(int i = 0; i<4; i++){
+			direccion[i] = direccion_[i];
+		}
+
+
+		snprintf(raw_msg, msg_length+1, "%s", msg);
 		sprintf(sdir, "%hhu.%hhu.%hhu.%hhu", direccion[0], direccion[1], direccion[2], direccion[3]);
+
+		void* temp = rawPacket;
+		unsigned char* paddr = (unsigned char*) rawPacket;
+		
+		for(int i = 0; i<4; i++){
+			*paddr = direccion[i];
+			paddr += 1 ;
+			temp += 1;
+		}
 
 	}
 
 	Packet* fragment(unsigned int MTU){
-		
+
+	}
+
+	void *asBuf(){
+		return rawPacket;
 	}
 	
 
@@ -105,6 +126,6 @@ class Packet{
 
 	}
 	private:
-		char sdir[16];		
-		void* rawPacket = malloc(HEADER_SIZE + MSG_SIZE); // +1 to support usage of char[5] as a string
+		char sdir[16];
+		void* rawPacket = malloc(HEADER_SIZE + MSG_SIZE);
 };
