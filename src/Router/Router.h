@@ -10,19 +10,11 @@ class Router{
 		int sock_num;
 		int opt;
 
-		
-		Packet *readMsg(){
-			Packet pack(sock_num);
-			
-			return &pack;
-		}
 
 		void mainLoop(){
-			Packet *recv = readMsg();
+			Packet recv_full(sock_num);
+			Packet* recv = &recv_full;
 
-			printf("Paquete recibido desde %s:%u, que va hacia %s:%u\n",
-			long_addr_to_ip_str(recv->addr.sin_addr.s_addr), htons(recv->addr.sin_port),
-			char_arr_to_ip_str(recv->direccion), recv->puerto);
 			
 			if(recv->ttl == 0){
 				printf("Se recibió paquete desde %s:%u con TTL 0\n" , long_addr_to_ip_str(recv->addr.sin_addr.s_addr), htons(recv->addr.sin_port));
