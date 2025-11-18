@@ -113,9 +113,7 @@ class Packet{
 		snprintf((char*)temp, msg_length+1, "%s", raw_msg);
 	}
 
-	Packet* fragment(unsigned int MTU){
 
-	}
 
 	void *asBuf(){
 		return rawPacket;
@@ -131,6 +129,7 @@ class Packet{
 		printf("ID: %u\n", ID);
 		printf("Offset: %u\n", offset);
 		printf("Tamaño: %u\n", msg_length);
+		printf("Flag: %u\n", flag);
 		printf("Contenido:%s\n", raw_msg);
 
 	}

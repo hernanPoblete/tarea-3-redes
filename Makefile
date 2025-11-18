@@ -3,9 +3,10 @@
 
 FILES = main.cpp src/Router/Router.cpp src/utils.cpp src/Router/RoutingTable/Table.cpp
 NAME = Router.out
-FLAGS = -Wwrite-strings -lstdc++ -Wreturn-local-addr -O2 -o $(NAME)
+FLAGS = -Wno-pointer-arith -Wwrite-strings -lstdc++ -Wreturn-local-addr -O2 -o $(NAME)
 
 compile-cpp:
+	touch ./$(NAME)
 	make clean
 	g++ $(FLAGS) $(FILES)
 
