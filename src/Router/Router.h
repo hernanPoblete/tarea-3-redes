@@ -18,7 +18,7 @@ class Router{
 				printf("No hay ruta para llegar hasta %s desde la dirección %s\n", char_arr_to_ip_str(pack.direccion), long_addr_to_ip_str(pack.addr.sin_addr.s_addr));
 			}else{
 				printf("Redirigiendo paquete en dirección de memoria %p con destino final %s:%u, desde %s:%u hacia %s:%u\n", 
-					recv, 
+					&pack, 
 					char_arr_to_ip_str(pack.direccion), pack.puerto, 
 					long_addr_to_ip_str(address.sin_addr.s_addr), htons(address.sin_port),
 					char_arr_to_ip_str(node->gateway_ip), node->gateway_port
@@ -36,7 +36,7 @@ class Router{
 				pack.ttl-=1;
 
 
-				sendto(sock_num, pack.asBuf(), HEADER_SIZE+MSG_SIZE, 0, (struct sockaddr*)&out, (socklen_t)sizeof(out));
+				sendto(sock_num, pack.asBuf(), HEADER_SIZE+pack.msg_length, 0, (struct sockaddr*)&out, (socklen_t)sizeof(out));
 			}	
 		}
 

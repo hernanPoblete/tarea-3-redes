@@ -34,7 +34,6 @@ class Packet{
 	Packet(int socket){
 		int len = sizeof(addr);
 		int status = recvfrom(socket, rawPacket, HEADER_SIZE+MSG_SIZE, 0, (struct sockaddr*)&addr, (socklen_t*)&len);
-
 		if(status<0){
 			perror("Error while reading");
 			exit(1);
@@ -50,27 +49,18 @@ class Packet{
 
 		puerto = *((unsigned int*)(current)); //Extraer el puerto
 		current+=4;
-
 		ttl = *((char*) current); // Recordatorio de que no tendría que estar haciendo este casteo si estuviera en C en vez de CPP
 		current += 1;
-
 		ID = *((unsigned int*) current);
 		current+=4;
 	
-	
 		offset = *((unsigned int*) current);
 		current+=4;
-
 		msg_length = *((unsigned int*) current);
 		current += 4;
-
 		flag = *((unsigned char*) current);
 		current+=1;
-
-	
 		snprintf(raw_msg, msg_length+1, "%s", (char*)current);
-		
-
 		
 	};
 
@@ -94,14 +84,33 @@ class Packet{
 		sprintf(sdir, "%hhu.%hhu.%hhu.%hhu", direccion[0], direccion[1], direccion[2], direccion[3]);
 
 		void* temp = rawPacket;
-		unsigned char* paddr = (unsigned char*) rawPacket;
+		
 		
 		for(int i = 0; i<4; i++){
-			*paddr = direccion[i];
-			paddr += 1 ;
+			*((unsigned char*)temp) = direccion[i];
 			temp += 1;
 		}
 
+		*((unsigned int*)temp) = puerto;
+		temp+=4;
+
+		*((unsigned char*)temp) = ttl;
+		temp+=1;
+
+		*((unsigned int*)temp) = ID;
+		temp+=4;
+
+		*((unsigned int*)temp) = offset;
+		temp+=4;
+
+		*((unsigned int*)temp) = msg_length;
+		temp+=4;
+
+		*((unsigned char*)temp) = flag;
+		temp+=1;
+
+
+		snprintf((char*)temp, msg_length+1, "%s", raw_msg);
 	}
 
 	Packet* fragment(unsigned int MTU){
