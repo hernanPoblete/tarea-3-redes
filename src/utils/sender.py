@@ -1,6 +1,6 @@
 import socket
 from functools import reduce
-
+from random import randbytes, randint
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
@@ -51,13 +51,24 @@ while True:
 	msg_bytes = message.encode()
 	ttl_bytes = ttl.to_bytes()
 
-	full_msg = dest_bytes+dest_port_bytes+ttl_bytes+msg_bytes
-	
+
+	ID = randbytes(4)
+
+	full_msg = dest_bytes+dest_port_bytes+ttl_bytes
+	full_msg += ID+ (0).to_bytes(4) +len(msg_bytes).to_bytes(4, 'little')+b'\x00' #ID, Offset, Length, flag
+	full_msg+=msg_bytes
 	if (not first_attempt) and mode == 3:
 		input()
 	print("Enviando mensaje:", full_msg)
+	print("\n", 
+	   f"IP= {dest} (", dest_bytes , ")\n",
+	   f"Puerto= {port}\n" , 
+	   f"TTL={ttl}\n", 
+	   f"ID= {int.from_bytes(ID, "little")} (", ID, ")\n",
+	   "Offset= 0\n",
+	   "Flag= 0\n",
+	   sep="")
 	
 	sock.sendto(full_msg, addr_router)
 	if (first_attempt):
 		first_attempt = False
-	
