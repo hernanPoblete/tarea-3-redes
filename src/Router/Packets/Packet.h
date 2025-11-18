@@ -17,9 +17,9 @@ typedef struct{
 class Packet{
 	
 	public:
-	sockaddr_in addr;
 
-	//STRAIGHT FROM LEGACY PACKET FOR COMPATIBILITY PURPOSES ONLY. IF TIME, THIS WILL BE DEPRECATED
+	//STRAIGHT FROM LEGACY PACKET FOR COMPATIBILITY PURPOSES ONLY. IF TIME, THIS WILL BE DEPRECATED	
+	sockaddr_in addr;
 	unsigned char direccion[4];
 	unsigned int puerto;
 	unsigned char ttl;
@@ -73,10 +73,28 @@ class Packet{
 
 		
 	};
+
+
+	Packet(	struct sockaddr_in addr_, unsigned char direccion_[4], unsigned int puerto_, unsigned char ttl_, unsigned int ID_, unsigned int offset_, unsigned char flag_, unsigned int msg_length_){
+		addr = addr_;
+		puerto = puerto_;
+		ttl = ttl_;
+		ID=ID_;
+		offset = offset_;
+		flag = flag_;
+		msg_length = msg_length_;
+		sprintf(sdir, "%hhu.%hhu.%hhu.%hhu", direccion[0], direccion[1], direccion[2], direccion[3]);
+
+	}
+
+	Packet* fragment(unsigned int MTU){
+		
+	}
 	
 
 	void print(){
 		printf("Información de paquete...\n");
+		printf("Proveniente desde %s:%u\n", long_addr_to_ip_str(addr.sin_addr.s_addr), addr.sin_port);
 		printf("Dirección: %s\n", sdir);
 		printf("Puerto: %u\n", puerto);
 		printf("TTL: %u\n", ttl);

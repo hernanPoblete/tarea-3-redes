@@ -14,7 +14,6 @@ class Router{
 		void mainLoop(){
 			Packet recv_full(sock_num);
 			Packet* recv = &recv_full;
-
 			
 			if(recv->ttl == 0){
 				printf("Se recibió paquete desde %s:%u con TTL 0\n" , long_addr_to_ip_str(recv->addr.sin_addr.s_addr), htons(recv->addr.sin_port));
