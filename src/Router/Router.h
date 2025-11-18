@@ -1,6 +1,6 @@
 #include "../config.h"
 #include "RoutingTable/Table.h"
-#include "Packets/Packet.h"
+#include "Packets/Defragmentator.h"
 #include <bits/stdc++.h>
 using namespace std;
 class Router{
@@ -73,6 +73,11 @@ class Router{
 				RouteNode *node = routing_table->lookup(pack.direccion, pack.puerto);
 				sendPacketByFragments(pack, node);
 			}else{
+
+
+				/**
+				 * Acá va toda la lógica de refragmentación de paquetes...
+				 */
 				printf("%s\n", pack.raw_msg);
 			}
 
@@ -81,7 +86,8 @@ class Router{
 			mainLoop();
 		}
 
-
+	private:
+		Defragmentator defrag;
 };
 
 Router makeRouter(char* ip, int port, char* filename);

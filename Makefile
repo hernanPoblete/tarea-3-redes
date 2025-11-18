@@ -1,7 +1,7 @@
 
 
 
-FILES = main.cpp src/Router/Router.cpp src/utils.cpp src/Router/RoutingTable/Table.cpp
+FILES = main.cpp src/Router/Router.cpp src/utils.cpp src/Router/RoutingTable/Table.cpp src/Router/Packets/Defragmentator.cpp
 NAME = Router.out
 FLAGS = -Wno-pointer-arith -Wwrite-strings -lstdc++ -Wreturn-local-addr -O2 -o $(NAME)
 
