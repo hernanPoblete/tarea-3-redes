@@ -12,19 +12,9 @@ class Router{
 
 		
 		Packet *readMsg(){
-			Packet* ppack = (Packet*)malloc(sizeof(Packet));
-
-			//int status = read(sock_num, ppack, sizeof(Packet));
-
-			int len = sizeof(ppack->addr);
-			int status = recvfrom(sock_num, ppack, HEADER_SIZE+MSG_SIZE, 0, (struct sockaddr*)&ppack->addr, (socklen_t*)&len);
-
-			if(status<0){
-				perror("Error while reading");
-				exit(1);
-			}
-			ppack->raw_msg[status-HEADER_SIZE] = '\0';
-			return ppack;
+			Packet pack(sock_num);
+			
+			return &pack;
 		}
 
 		void mainLoop(){
