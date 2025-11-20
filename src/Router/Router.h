@@ -76,7 +76,7 @@ class Router{
 
 
 				/**
-				 * Acá va toda la lógica de refragmentación de paquetes...
+				 * Acá va toda la lógica de defragmentación de paquetes...
 				 */
 				printf("%s\n", pack.raw_msg);
 			}
