@@ -11,8 +11,6 @@ compile-cpp:
 	g++ $(FLAGS) $(FILES)
 
 	@echo ""
-compile-typescript:
-	cd "Node-Logger/" && tsc
 quick:
 	touch $(NAME)
 	rm $(NAME)
@@ -26,10 +24,3 @@ run-compiled:
 compile-full:
 	@echo "Compiling Router Binary..."
 	make compile-cpp
-	@echo "compiling logger from typescript into javascript"
-	@echo "(Logger made by Hernán Poblete btw...)"
-	make compile-typescript
-
-run-full:
-	make compile-full
-	node ./Node-Logger/dist/index.js $(NAME)
