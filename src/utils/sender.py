@@ -24,24 +24,27 @@ port = 0
 message = ""
 router_ip = ""
 router_port = 0
+
+persistent_TTL = input("Usar el mismo TTL todo el tiempo? (s/n): ") == "s"
+
 ttl = 0
 
 while True:
 	print("================================")
 
 	if first_attempt or (mode in [0, 1]):
-		dest = input("Destino: ")
-		port = int(input("Destino (puerto): "))
+		dest = input("Dirección de destino: ")
+		port = int(input("Puerto de destino: "))
 
 	if first_attempt or (mode in [0, 1, 2]):
 		message = input("Mensaje: ")
 
 	if first_attempt or (mode in [0]):
-		router_ip = input("Dirección del router (CIDR): ")
-		router_port = int(input("Dirección del router (Puerto): "))
+		router_ip = input("Dirección del router: ")
+		router_port = int(input("Puerto en el que escucha el router: "))
 
-
-	ttl = int(input("TTL: "))
+	if (first_attempt or (not persistent_TTL)):
+		ttl = int(input("TTL: "))
 
 	addr_router = (router_ip, router_port)
 

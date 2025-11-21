@@ -68,7 +68,7 @@ class Router{
 
 		void mainLoop(){
 			Packet pack(sock_num);
-			//pack.print();
+
 			if(pack.ttl == 0){
 				printf("Se recibió paquete desde %s:%u con TTL 0\n" , long_addr_to_ip_str(pack.addr.sin_addr.s_addr), htons(pack.addr.sin_port));
 			} else if(address.sin_port != htons(pack.puerto) || address.sin_addr.s_addr != char_arr_to_ip_long(pack.direccion)){

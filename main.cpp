@@ -18,7 +18,6 @@ int main(int argc, char *argv[]){
 
 	Router r = makeRouter(argv[1], atoi(argv[2]), argv[3]);
 
-	//r.routing_table->print();
 	r.mainLoop();
 	return 0;
 }
