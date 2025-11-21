@@ -13,6 +13,7 @@ typedef struct defragtree{
 DefragTree* makeDefragTree();
 void destroyDefragTree(DefragTree *t);
 void addPacket(DefragTree *t, Packet* toAdd);
+void printTree(DefragTree *t);
 
 
 class Defragmentator{
@@ -27,6 +28,13 @@ class Defragmentator{
 			addPacket(treeMap[pack.ID], &pack);
 		}
 
+
+		void print(unsigned int id){
+			if(treeMap.find(id) != treeMap.end()){
+				DefragTree* head = treeMap[id];
+				printTree(head);
+			}
+		}
 
 
 

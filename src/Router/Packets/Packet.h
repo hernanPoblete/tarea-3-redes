@@ -131,7 +131,7 @@ class Packet{
 
 	void print(){
 		printf("Información de paquete...\n");
-		printf("Proveniente desde %s:%u\n", long_addr_to_ip_str(addr.sin_addr.s_addr), addr.sin_port);
+		printf("Proveniente desde %s:%u\n", long_addr_to_ip_str(addr.sin_addr.s_addr), htons(addr.sin_port));
 		printf("Dirección: %s\n", sdir);
 		printf("Puerto: %u\n", puerto);
 		printf("TTL: %u\n", ttl);

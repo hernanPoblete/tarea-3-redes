@@ -24,3 +24,20 @@ void addPacket(DefragTree *t, Packet* toAdd){
 		addPacket(t->right, toAdd);
 	}
 };
+
+
+void printTree(DefragTree *t){
+
+	if(t==NULL) return;
+
+	DefragTree *left = t->left;
+	DefragTree *right = t->right;
+	Packet *current = t->current;
+
+	if(current == NULL) return;
+	
+	printTree(left);
+	current->print();
+	printTree(right);
+}
+

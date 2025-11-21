@@ -42,18 +42,19 @@ class Router{
 
 			unsigned int remaining = pack.msg_length;
 			char* text = pack.raw_msg;
-			unsigned int offset = 0;
+			unsigned int offset = pack.offset;
 
-
+			printf("Enviando %u fragmentos...\n\n\n", frag_amount);
+			
 			for(int i = 0; i < frag_amount; i++){
 				unsigned int frag_size = min(node->MTU, remaining);
-				unsigned char new_flag = (pack.flag)|| (frag_amount!=i+1);
+				unsigned char new_flag = (pack.flag)||(frag_amount!=i+1);
 
 				char fragContent[frag_size];
 
 				snprintf(fragContent, frag_size+1, "%s", text);
 				
-				Packet toSend(pack.addr, pack.direccion, pack.puerto, pack.ttl, pack.ID, offset, new_flag, frag_size, fragContent);
+				Packet toSend(pack.addr, pack.direccion, pack.puerto, pack.ttl-1, pack.ID, offset, new_flag, frag_size, fragContent);
 
 				sendPacket(toSend, node);
 
@@ -62,11 +63,12 @@ class Router{
 				remaining -= frag_size;
 				offset += frag_size;
 			}
+
 		}
 
 		void mainLoop(){
 			Packet pack(sock_num);
-
+			//pack.print();
 			if(pack.ttl == 0){
 				printf("Se recibió paquete desde %s:%u con TTL 0\n" , long_addr_to_ip_str(pack.addr.sin_addr.s_addr), htons(pack.addr.sin_port));
 			} else if(address.sin_port != htons(pack.puerto) || address.sin_addr.s_addr != char_arr_to_ip_long(pack.direccion)){
@@ -78,7 +80,13 @@ class Router{
 				/**
 				 * Acá va toda la lógica de defragmentación de paquetes...
 				 */
-				printf("%s\n", pack.raw_msg);
+
+				defrag.addFrag(pack);
+
+
+				printf("Imprimiendo la info del desfragmentador...\n\n\n");
+				defrag.print(pack.ID);
+				printf("\n\n\n");
 			}
 
 
