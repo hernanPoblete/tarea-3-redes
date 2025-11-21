@@ -84,9 +84,11 @@ class Router{
 				defrag.addFrag(pack);
 
 
-				printf("Imprimiendo la info del desfragmentador...\n\n\n");
-				defrag.print(pack.ID);
-				printf("\n\n\n");
+				char *potential_full_msg = defrag.join_packets(pack.ID);
+
+				if(potential_full_msg != NULL){
+					printf("Mensaje reensamblado!!!!!!!! :3 \n%s\n", potential_full_msg);
+				}
 			}
 
 

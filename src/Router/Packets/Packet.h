@@ -123,6 +123,10 @@ class Packet{
 	}
 
 
+	bool operator<(const Packet& other){
+		return offset < other.offset;
+	}
+
 
 	void *asBuf(){
 		return rawPacket;
