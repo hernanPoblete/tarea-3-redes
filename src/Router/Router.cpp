@@ -7,8 +7,6 @@
 #include <unistd.h>
 #include "Router.h"
 
-
-
 Router makeRouter(char* ip, int port, char* filename){
 
 	//Aloja en memoria los datos del router
@@ -27,9 +25,6 @@ Router makeRouter(char* ip, int port, char* filename){
 	r.address.sin_family = AF_INET;
 	r.address.sin_addr.s_addr = addr;
 	r.address.sin_port = htons(port);
-
-
-
 
 	r.sock_num = socket(AF_INET, SOCK_DGRAM, 0);
 	r.opt = 1;

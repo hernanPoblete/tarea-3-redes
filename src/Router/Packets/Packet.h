@@ -3,6 +3,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../../utils.h"
+#include <bits/stdc++.h>
+using namespace std;
+
+
 
 /**
  * LES JURO QUE NO ESTAMOS USANDO LLM. COMO NOS VUELVAN 
@@ -48,31 +52,67 @@ class Packet{
 			exit(1);
 		}
 
-		void *current = rawPacket;
+		void *current = rawPacket; // paquete en bytes turbocrudo
 		for(int i = 0; i<4; i++){ // Draws address from the rawPacket
 			direccion[i] = *((unsigned char*)current);
 			current += 1;	// Recordatorio de que las alertas son solo sugerencias
 		}
 
-		sprintf(sdir, "%hhu.%hhu.%hhu.%hhu", direccion[0], direccion[1], direccion[2], direccion[3]);
+		current -= 4;
+
+		snprintf(sdir, 16, "%hhu.%hhu.%hhu.%hhu", direccion[0], direccion[1], direccion[2], direccion[3]);
+
+		for(int i = 0; i<status; i++){
+			unsigned char* ptr = (unsigned char *)current;
+			unsigned int num = *(ptr + i);
+
+			//cout << num << ' ';
+		}
+		//cout << endl;
+
+		current += 4;
 
 		puerto = *((unsigned int*)(current)); //Extraer el puerto
 		current+=4;
-		ttl = *((char*) current); // Recordatorio de que no tendría que estar haciendo este casteo si estuviera en C en vez de CPP
+
+		unsigned char* ttlc = (unsigned char*)(current); // Recordatorio de que no tendría que estar haciendo este casteo si estuviera en C en vez de CPP
+		ttl = *ttlc;
+
+		//cout << puerto << " " << (int)ttl << endl;
+
 		current += 1;
-		ID = *((unsigned int*) current);
+
+		
+		ID = read_bytes(current, 4);
 		current+=4;
+
+		//cout << ID << endl;
 	
-		offset = *((unsigned int*) current);
+		offset = read_bytes(current, 4);
 		current+=4;
-		msg_length = *((unsigned int*) current);
+
+		//cout << offset << endl;
+		
+		msg_length = read_bytes(current, 4);
 		current += 4;
+
+		//cout << "msg_length: " << msg_length << endl;
+
 		flag = *((unsigned char*) current);
 		current+=1;
-		snprintf(raw_msg, msg_length+1, "%s", (char*)current);
+		
+		unsigned char* ptr = (unsigned char*)current;
+		for(int i = 0; i<msg_length; i++){
+			raw_msg[i] = *(ptr+i);
+			//cout << raw_msg[i];
+		}
+		raw_msg[msg_length] = 0;
+
+		//cout << endl;
+
+		//cout << "skibidi" << endl;
 		
 	};
-
 
 	Packet(	struct sockaddr_in addr_, unsigned char direccion_[4], unsigned int puerto_, unsigned char ttl_, unsigned int ID_, unsigned int offset_, unsigned char flag_, unsigned int msg_length_, char* msg){
 		addr = addr_;
@@ -90,7 +130,7 @@ class Packet{
 
 
 		snprintf(raw_msg, msg_length+1, "%s", msg);
-		sprintf(sdir, "%hhu.%hhu.%hhu.%hhu", direccion[0], direccion[1], direccion[2], direccion[3]);
+		snprintf(sdir, 16, "%hhu.%hhu.%hhu.%hhu", direccion[0], direccion[1], direccion[2], direccion[3]);
 
 		void* temp = rawPacket;
 		
@@ -148,5 +188,17 @@ class Packet{
 	}
 	private:
 		char sdir[16];
-		void* rawPacket = malloc(HEADER_SIZE + MSG_SIZE);
+		void* rawPacket = malloc(HEADER_SIZE + MSG_SIZE+1);
+		unsigned int read_bytes(void *buffer, int amt){
+			unsigned cnt = 0;
+			unsigned int ans = 0;
+			unsigned char* ptr = (unsigned char*)buffer;
+			for(int i = 0; i<amt; i++){
+				unsigned char c = *(ptr + i);
+
+				ans += (unsigned int)c<<cnt;
+				cnt += 8;
+			}
+			return ans;
+		}
 };

@@ -22,22 +22,26 @@ class Defragmentator{
 
 	public:
 		void addFrag(Packet pack){
-			
+			/*
 			if(treeMap.find(pack.ID) == treeMap.end()){
 				treeMap[pack.ID] = makeDefragTree();
 			}
 
 			addPacket(treeMap[pack.ID], &pack);
-
+			*/
 			packetMap[pack.ID].push_back(pack);
 		}
 
 
 		void print(unsigned int id){
+			/*
 			if(treeMap.find(id) != treeMap.end()){
 				DefragTree* head = treeMap[id];
 				printTree(head);
-			}
+			}*/
+			char* msg = join_packets(id);
+			printf("%s\n", msg);
+			free(msg);
 		}
 
 		char* join_packets(unsigned int id){
@@ -72,7 +76,7 @@ class Defragmentator{
 
 
 	private:
-		map<unsigned int, DefragTree*> treeMap;
+		//map<unsigned int, DefragTree*> treeMap;
 		map<unsigned int, vector<Packet>> packetMap;
 
 };

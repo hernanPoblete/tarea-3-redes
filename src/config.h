@@ -5,4 +5,4 @@
 #define MAX_BUFF_SIZE 10
 
 #define HEADER_SIZE 22
-#define MSG_SIZE 1024
+#define MSG_SIZE 8192

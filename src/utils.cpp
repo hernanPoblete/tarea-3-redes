@@ -11,7 +11,7 @@ unsigned long char_arr_to_ip_long(unsigned char* arr){
 	char *parsed = (char*)malloc(15);
 
 	unsigned long ret = 0;
-	sprintf(parsed, "%hhu.%hhu.%hhu.%hhu", *(arr+0), *(arr+1), *(arr+2), *(arr+3));
+	snprintf(parsed, 15, "%hhu.%hhu.%hhu.%hhu", *(arr+0), *(arr+1), *(arr+2), *(arr+3));
 	
 	inet_pton(AF_INET, parsed, &ret);
 	return ret;
@@ -20,7 +20,7 @@ unsigned long char_arr_to_ip_long(unsigned char* arr){
 char* char_arr_to_ip_str(unsigned char* arr){
 	char *parsed = (char*)malloc(15);
 
-	sprintf(parsed, "%hhu.%hhu.%hhu.%hhu", *(arr+0), *(arr+1), *(arr+2), *(arr+3));
+	snprintf(parsed, 15, "%hhu.%hhu.%hhu.%hhu", *(arr+0), *(arr+1), *(arr+2), *(arr+3));
 	
 	return parsed;	
 }

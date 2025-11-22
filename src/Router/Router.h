@@ -10,6 +10,43 @@ class Router{
 		int sock_num;
 		int opt;
 
+		// class constructor
+		Router();
+
+		Router(char* ip, int port, char* filename){
+			FILE* tableFile = fopen(filename, "r");
+			routing_table = makeTable(tableFile);
+			fclose(tableFile);
+
+			unsigned long addr = 0;
+			inet_pton(AF_INET, ip, &addr);
+
+			address.sin_family = AF_INET;
+			address.sin_addr.s_addr = addr;
+			address.sin_port = htons(port);
+
+			sock_num = socket(AF_INET, SOCK_DGRAM, 0);
+			opt = 1;
+
+			if(sock_num < 0){
+				perror("Socket creation failed!");
+				exit(sock_num);
+			}
+
+
+			//Binding
+
+			if(setsockopt(sock_num, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))){
+				perror("setsockopt");
+				exit(EXIT_FAILURE);
+			};
+
+			if(bind(sock_num, (struct sockaddr*)&address, sizeof(address))<0){
+				perror("bind failed");
+				exit(1);
+			}
+		}
+
 		void sendPacket(Packet pack, RouteNode* node){
 			if(node == NULL){
 				printf("No hay ruta para llegar hasta %s desde la dirección %s\n", char_arr_to_ip_str(pack.direccion), long_addr_to_ip_str(pack.addr.sin_addr.s_addr));
@@ -38,7 +75,7 @@ class Router{
 		}
 
 		void sendPacketByFragments(Packet pack, RouteNode* node){
-			unsigned int frag_amount = ceil(((double) pack.msg_length)/((double) node->MTU));
+			unsigned int frag_amount = ( pack.msg_length + node->MTU - 1)/( node->MTU);
 
 			unsigned int remaining = pack.msg_length;
 			char* text = pack.raw_msg;
@@ -49,12 +86,14 @@ class Router{
 			for(int i = 0; i < frag_amount; i++){
 				unsigned int frag_size = min(node->MTU, remaining);
 				unsigned char new_flag = (pack.flag)||(frag_amount!=i+1);
-
-				char fragContent[frag_size];
-
-				snprintf(fragContent, frag_size+1, "%s", text);
 				
-				Packet toSend(pack.addr, pack.direccion, pack.puerto, pack.ttl-1, pack.ID, offset, new_flag, frag_size, fragContent);
+				//cout << "fragsize: " << frag_size << endl;
+				char fragContent[frag_size+1];
+				
+				snprintf(fragContent, frag_size+1, "%s", text);
+				//cout << "adsasdasd" << endl;
+				
+				Packet toSend(pack.addr, pack.direccion, pack.puerto, pack.ttl, pack.ID, offset, new_flag, frag_size, fragContent);
 
 				sendPacket(toSend, node);
 

@@ -16,8 +16,7 @@ int main(int argc, char *argv[]){
 
 	FILE *f = fopen(argv[3], "r");
 
-	Router r = makeRouter(argv[1], atoi(argv[2]), argv[3]);
-
+	Router r(argv[1], atoi(argv[2]), argv[3]);
 	r.mainLoop();
 	return 0;
 }
