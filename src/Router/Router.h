@@ -75,7 +75,7 @@ class Router{
 		}
 
 		void sendPacketByFragments(Packet pack, RouteNode* node){
-			unsigned int frag_amount = ( pack.msg_length + node->MTU - 1)/( node->MTU);
+			unsigned int frag_amount = (pack.msg_length + node->MTU - HEADER_SIZE - 1)/( node->MTU - HEADER_SIZE);
 
 			unsigned int remaining = pack.msg_length;
 			char* text = pack.raw_msg;
@@ -84,23 +84,23 @@ class Router{
 			printf("Enviando %u fragmentos...\n\n\n", frag_amount);
 			
 			for(int i = 0; i < frag_amount; i++){
-				unsigned int frag_size = min(node->MTU, remaining);
+				unsigned int content_size = min(node->MTU - HEADER_SIZE, remaining);
 				unsigned char new_flag = (pack.flag)||(frag_amount!=i+1);
 				
 				//cout << "fragsize: " << frag_size << endl;
-				char fragContent[frag_size+1];
+				char fragContent[content_size+1];
 				
-				snprintf(fragContent, frag_size+1, "%s", text);
+				snprintf(fragContent, content_size+1, "%s", text);
 				//cout << "adsasdasd" << endl;
 				
-				Packet toSend(pack.addr, pack.direccion, pack.puerto, pack.ttl, pack.ID, offset, new_flag, frag_size, fragContent);
+				Packet toSend(pack.addr, pack.direccion, pack.puerto, pack.ttl, pack.ID, offset, new_flag, content_size, fragContent);
 
 				sendPacket(toSend, node);
 
 
-				text+=frag_size;
-				remaining -= frag_size;
-				offset += frag_size;
+				text+=content_size;
+				remaining -= content_size;
+				offset += content_size;
 			}
 
 		}
