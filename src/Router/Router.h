@@ -58,6 +58,8 @@ class Router{
 					char_arr_to_ip_str(node->gateway_ip), node->gateway_port
 				);
 
+				pack.print();
+
 				struct sockaddr_in out;
 
 				out.sin_family = AF_INET;
@@ -67,7 +69,7 @@ class Router{
 				inet_pton(AF_INET, char_arr_to_ip_str(node->gateway_ip) ,&ip);
 
 				out.sin_addr.s_addr = ip;
-				pack.ttl-=1;
+				//pack.ttl-=1;
 
 
 				sendto(sock_num, pack.asBuf(), HEADER_SIZE+pack.msg_length, 0, (struct sockaddr*)&out, (socklen_t)sizeof(out));
@@ -93,7 +95,7 @@ class Router{
 				snprintf(fragContent, content_size+1, "%s", text);
 				//cout << "adsasdasd" << endl;
 				
-				Packet toSend(pack.addr, pack.direccion, pack.puerto, pack.ttl, pack.ID, offset, new_flag, content_size, fragContent);
+				Packet toSend(pack.addr, pack.direccion, pack.puerto, pack.ttl-1, pack.ID, offset, new_flag, content_size, fragContent);
 
 				sendPacket(toSend, node);
 
