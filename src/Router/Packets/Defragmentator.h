@@ -71,6 +71,8 @@ class Defragmentator{
 				message[i] = ans[i];
 			}
 			message[curr] = '\0';
+
+			cout << packetMap[id].size() << '\n';
 			return message;
 		}
 
